@@ -1,0 +1,168 @@
+INSERT OR REPLACE INTO LocalizedText (Language, Tag, Text) VALUES
+
+  -- === Manual Reinforce (unit panel) ==========================================================
+  ('en_US', 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_NAME',
+    'Manual Reinforce'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_DESCRIPTION',
+    'Pick a commander to join. The unit {1_Verb} across the map to it. Closest takes {2_Turns} turns.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_DESCRIPTION_THIS_TURN',
+    'Pick a commander to join. The unit {1_Verb} across the map and packs on arrival. Soonest arrival: this turn.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_DESCRIPTION_NO_TARGET',
+    'Pick a commander to join. The unit {1_Verb} across the map and packs on arrival.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_FAIL_NO_REACHABLE_COMMANDERS_REASON',
+    'No commander is reachable from here.'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_TRAVEL_VERB_LAND',  'marches'),
+  ('en_US', 'LOC_BETTER_ACTIONS_TRAVEL_VERB_SEA',   'sails'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_NAME',
+    'Reinforce: Nearest'),
+  ('en_US', 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION',
+    'Send straight to {1_Commander}, level {2_Level} - {3_Turns} turns away, {4_Slots} slots free.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION_THIS_TURN',
+    'Send straight to {1_Commander}, level {2_Level} - arrives this turn, {3_Slots} slots free.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION_FULL',
+    'Send straight to {1_Commander}, level {2_Level} - {3_Turns} turns away.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION_FULL_THIS_TURN',
+    'Send straight to {1_Commander}, level {2_Level} - arrives this turn.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_FAIL_NO_FREE_SLOTS_REASON',
+    'That commander has no free slots; the unit will arrive but cannot join.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_REINFORCE_NEAREST_HINT',
+    'Right-click: {1_Nearest}'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_ABILITIES_TITLE',
+    'Abilities'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ABILITIES_INHERENT',
+    'Inherent'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ABILITIES_TRANSIENT',
+    'Granted'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_MASS_REBASE_NAME',
+    'Mass Rebase'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MASS_REBASE_DESCRIPTION',
+    'Move every eligible Aircraft in this army to a new Air Base within twice their Movement range.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MASS_REBASE_FAIL_NO_ELIGIBLE_REASON',
+    'No aircraft in this army can rebase right now.'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_QUEUE_HINT_DESCRIPTION',
+    'Not possible here - click to queue it for when this unit arrives.'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_ATTACH_ESCORT_NAME',
+    'Attach Escort'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ATTACH_ESCORT_DESCRIPTION',
+    '{1_Unit} moves with this commander until detached.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ATTACH_ESCORT_DESCRIPTION_GENERIC',
+    'A nearby unit moves with this commander until detached.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ATTACH_ESCORT_FAIL_NO_CANDIDATE_REASON',
+    'No eligible unit on this tile or next to it.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_DETACH_ESCORT_NAME',
+    'Detach Escort'),
+  ('en_US', 'LOC_BETTER_ACTIONS_DETACH_ESCORT_DESCRIPTION',
+    '{1_Unit} stops travelling with this commander.'),
+
+  -- === Call for Reinforcements (army panel, replaces Pack Army on land/naval) ==================
+  ('en_US', 'LOC_BETTER_ACTIONS_REINFORCE_CALL_NAME',
+    'Call for Reinforcements'),
+  ('en_US', 'LOC_BETTER_ACTIONS_REINFORCE_CALL_DESCRIPTION',
+    '{1_Count} units within {2_Radius} tiles will travel and pack into this commander.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_REINFORCE_CALL_DESCRIPTION_ONE',
+    'One unit within {1_Radius} tiles will travel and pack into this commander.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_REINFORCE_CALL_DESCRIPTION_NONE',
+    'Nearby units travel and pack into this commander.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_REINFORCE_CALL_FAIL_NONE_REASON',
+    'Nothing within {1_Radius} tiles can reach this commander, or it has no free slots.'),
+
+  -- === Recall Aircraft (army panel, replaces Pack Army on air commanders) ======================
+  ('en_US', 'LOC_BETTER_ACTIONS_AIRCRAFT_PULL_NAME',
+    'Recall Aircraft'),
+  ('en_US', 'LOC_BETTER_ACTIONS_AIRCRAFT_PULL_DESCRIPTION',
+    'Pull in eligible Aircraft from other commanders that could rebase here this turn.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_AIRCRAFT_PULL_FAIL_NONE_REASON',
+    'No aircraft can rebase here, or this commander has no free slots.'),
+
+  -- === Gather Ground Forces (army panel, Airborne Forces squadron commanders) ==================
+  ('en_US', 'LOC_BETTER_ACTIONS_LAND_PACK_NAME',
+    'Gather Ground Forces'),
+  ('en_US', 'LOC_BETTER_ACTIONS_LAND_PACK_DESCRIPTION',
+    'Pick up eligible Infantry and Cavalry units that could join this turn.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_LAND_PACK_FAIL_NONE_REASON',
+    'No eligible unit can join this turn, or this commander has no free slots.'),
+
+  -- === Smart strikes (army panel) =============================================================
+  ('en_US', 'LOC_BETTER_ACTIONS_SMART_GROUND_ATTACK_NAME',
+    'Ground Attack'),
+  ('en_US', 'LOC_BETTER_ACTIONS_SMART_CARPET_BOMB_NAME',
+    'Carpet Bomb'),
+  ('en_US', 'LOC_BETTER_ACTIONS_SMART_STRIKE_DESCRIPTION',
+    'Attack with packed units.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_SMART_STRIKE_FAIL_NO_ELIGIBLE_REASON',
+    'No eligible aircraft in this army.'),
+
+  -- === Focus fire (army panel) ================================================================
+  ('en_US', 'LOC_BETTER_ACTIONS_FOCUS_FIRE_NAME',
+    'Focus Fire'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FOCUS_FIRE_DESCRIPTION',
+    'Focus Fire without the bonus, but doesnt end commander turn'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FOCUS_FIRE_FAIL_NO_ELIGIBLE_REASON',
+    'No eligible ranged or siege unit in range.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MELEE_FOCUS_FIRE_NAME',
+    'Melee Focus Fire'),
+  ('en_US', 'LOC_BETTER_ACTIONS_MELEE_FOCUS_FIRE_DESCRIPTION',
+    'Coordinated Attack, but for adjacent units to enemy, and doesn''t end commander turn.'),
+
+  -- === Settlement rally points (production chooser) ============================================
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_CATEGORY_LAND',      'Land'),
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_CATEGORY_NAVAL',     'Naval'),
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_CATEGORY_AIR',       'Air'),
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_CATEGORY_CIVILIAN',  'Civilian'),
+  -- Whole button captions rather than "Set " + category, because a language that inflects the noun
+  -- or reverses the order cannot be served by concatenation.
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_SET',      'Set {1_Category} rally'),
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_CLEAR',    'Clear {1_Category} rally'),
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_PICKING',  '{1_Category}: click a plot'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_NAVAL_FAIL',  'Has to be a water plot'),
+  ('en_US', 'LOC_BETTER_ACTIONS_RALLY_AIR_FAIL',  'Has to be air commander plot'),
+
+
+
+  -- === Commander flag emblem picker (rename dialogue) ==========================================
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_TITLE',
+    'Flag Emblem'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_DEFAULT',
+    'Default (unit icon)'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_PROMOTION_GLYPH',
+    'Promotion record (updates as it promotes)'),
+
+  -- How this commander's emblem is recoloured. Set per commander, not globally.
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_LABEL',
+    'Emblem Colour'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_AUTO',
+    'Auto'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_AUTO_TOOLTIP',
+    'Adjust the colouring of the custom emblem'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_TINT',
+    'Player'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_TINT_TOOLTIP',
+    'Player Colour, matches your other units.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_GRAYSCALE',
+    'Grey'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_GRAYSCALE_TOOLTIP',
+    'Desaturates emblem to black and white.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_NONE',
+    'Original'),
+  ('en_US', 'LOC_BETTER_ACTIONS_FLAG_EMBLEM_COLOUR_NONE_TOOLTIP',
+    'Doesnt adjust colours.'),
+
+  ('en_US', 'LOC_BETTER_ACTIONS_ALERT_TURNS_NAME',
+    'Sleep for Turns'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ALERT_TURNS_DESCRIPTION',
+    'Sleep until a set number of turns have passed. Click to add a turn, right-click to remove one.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ALERT_TURNS_ACTIVE_DESCRIPTION',
+    'Sleeping for {1_Turns} more turn(s). Click to add a turn, right-click to remove one.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ALERT_RELIGION_NAME',
+    'Watch Religion'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ALERT_RELIGION_DESCRIPTION',
+    'Sleep in this Settlement until it no longer follows your Religion, then wake.'),
+  ('en_US', 'LOC_BETTER_ACTIONS_ALERT_RELIGION_ACTIVE_DESCRIPTION',
+    'Watching this Settlement. This Unit wakes if it stops following your Religion.');

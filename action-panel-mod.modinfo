@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mod id="action-panel-mod" version="1"
+	xmlns="ModInfo">
+	<Properties>
+		<Name>Action Panel Improvements</Name>
+		<Description>Adds useful UI features to minimise micromanagement for units. [BLIST][LI]Bulk attack options that dont end your commander turn, with multi attack previews.[LI]Manual Reinforcement actions to path units to a commander, or gather units near to a commander with a click. Also allows cross ocean reinforcement and naval units reinforcing in doing so.[LI] Settlements get rally points for units, so produced units can be set to travel to a given point or commander on being produced, including treasure convoys.[LI]New unit alerts allow sleeping a unit for a set number of turns, or for missionaries, until a settlement changes from your religion.[LI]Orders can be shift-queued so a missionary can walk somewhere and convert once they arrive.[LI]Handy little stuff like movement and tier of units of packed units, an ability breakdown, and custom emblems and promotion glyphs on commander flags.[/BLIST]</Description>
+		<Authors>Slothoth</Authors>
+		<ShowInBrowser>1</ShowInBrowser>
+		<Package>MOD</Package>
+        <AffectsSavedGames>0</AffectsSavedGames>
+	</Properties>
+	<Dependencies>
+	</Dependencies>
+	<ActionCriteria>
+		<Criteria id="always">
+			<AlwaysMet/>
+		</Criteria>
+	</ActionCriteria>
+	<ActionGroups>
+        <ActionGroup id="action-panel-improvements-shell-input" scope="shell" criteria="always">
+			<Properties>
+				<LoadOrder>10</LoadOrder>
+			</Properties>
+			<Actions>
+				<UpdateDatabase>
+					<Item>action_input.xml</Item>
+				</UpdateDatabase>
+				<UpdateText>
+					<Item>action_input_text.sql</Item>
+				</UpdateText>
+			</Actions>
+		</ActionGroup>
+
+        <ActionGroup id="action-panel-improvements-always" scope="game" criteria="always">
+			<Properties>
+				<LoadOrder>10</LoadOrder>
+			</Properties>
+			<Actions>
+				<UIScripts>
+					<Item>action.js</Item>
+				</UIScripts>
+				<UpdateDatabase>
+					<Item>mass-rebase.sql</Item>
+				</UpdateDatabase>
+				<UpdateText>
+					<Item>action_text.sql</Item>
+				</UpdateText>
+                <UpdateIcons>
+					<Item>icons_action.sql</Item>
+				</UpdateIcons>
+			</Actions>
+		</ActionGroup>
+        <ActionGroup id="action-panel-improvements-icons" scope="game" criteria="always">
+			<Properties>
+				<LoadOrder>10</LoadOrder>
+			</Properties>
+			<Actions>
+				<ImportFiles>
+					<Item>icons/Actions/action_Coordinated Attack_256.dds</Item>
+					<Item>icons/Actions/action_Focus Fire_256.dds</Item>
+					<Item>icons/Actions/action_Fortify_256.dds</Item>
+					<Item>icons/Actions/action_Pillage_256.dds</Item>
+					<Item>icons/Actions/action_Sleep_256.dds</Item>
+					<Item>icons/Generic/generic_Cavalry_256.dds</Item>
+					<Item>icons/Generic/generic_Hex_256.dds</Item>
+					<Item>icons/Generic/generic_Plus_256.dds</Item>
+					<Item>icons/Generic/generic_Star_256.dds</Item>
+					<Item>icons/Promotions/promo_Airlift_256.dds</Item>
+					<Item>icons/Promotions/promo_Assault_256.dds</Item>
+					<Item>icons/Promotions/promo_Bastion_256.dds</Item>
+					<Item>icons/Promotions/promo_Bombardment_256.dds</Item>
+					<Item>icons/Promotions/promo_Dogfighting_256.dds</Item>
+					<Item>icons/Promotions/promo_Engagement_256.dds</Item>
+					<Item>icons/Promotions/promo_Leadership_256.dds</Item>
+					<Item>icons/Promotions/promo_Logistics_256.dds</Item>
+					<Item>icons/Promotions/promo_Maneuver_256.dds</Item>
+					<Item>icons/Promotions/promo_Raids_256.dds</Item>
+					<Item>icons/Promotions/promo_Trung Nhi_256.dds</Item>
+					<Item>icons/Stats/stat_Health_256.dds</Item>
+					<Item>icons/Stats/stat_Melee_256.dds</Item>
+					<Item>icons/Stats/stat_Movement_256.dds</Item>
+					<Item>icons/Stats/stat_Ranged_256.dds</Item>
+					<Item>icons/Stats/stat_Sight_256.dds</Item>
+				</ImportFiles>
+                <UpdateIcons>
+					<Item>icons_action_new.sql</Item>
+				</UpdateIcons>
+			</Actions>
+		</ActionGroup>
+	</ActionGroups>
+</Mod>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Shift+left-click: queue a unit's order, or set a settlement's rally point.-->
+<Database>
+	<InputActions>
+		<Row ActionId="sloth-shift-click"
+		     DeviceType="Keyboard"
+		     Name="LOC_BETTER_ACTIONS_INPUT_SHIFT_CLICK"
+		     Description="LOC_BETTER_ACTIONS_INPUT_SHIFT_CLICK_TT" />
+	</InputActions>
+
+	<InputContextConstraints>
+		<Row ActionId="sloth-shift-click" ContextId="World"/>
+		<Row ActionId="sloth-shift-click" ContextId="Unit"/>
+	</InputContextConstraints>
+
+	<!--Right click for queueing as movement on map is right click. Left click for rally, as left click is context
+		for UI and right click doesnt work lol-->
+	<InputActionDefaultGestures>
+		<Row ActionId="sloth-shift-click" Index="0" GestureType="KBMouse" GestureData="KEY_SHIFT+MOUSE_R"/>
+		<Row ActionId="sloth-shift-click" Index="1" GestureType="KBMouse" GestureData="KEY_SHIFT+MOUSE_L"/>
+	</InputActionDefaultGestures>
+</Database>
