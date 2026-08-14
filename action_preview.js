@@ -1,11 +1,12 @@
 // Multi-attack combat preview panel. Just UI and rendering with DOM.
 // Pure rendering: it takes an array of plan steps and emits
 
-
+import { SetIsPlotTooltipVisible } from '/base-standard/ui-next/tooltips/plot-tooltip/plot-tooltip.js';
 
 const STRIKE_PREVIEW_ELEMENT_ID = 'ap-mod-strike-preview';
 
 function ensureStrikePreviewElement() {
+	SetIsPlotTooltipVisible(false);
 	let el = document.getElementById(STRIKE_PREVIEW_ELEMENT_ID);
 	if (el) {
 		return el;
@@ -30,6 +31,7 @@ function ensureStrikePreviewElement() {
 }
 
 export function hideStrikePreview() {
+	SetIsPlotTooltipVisible(true);
 	const el = document.getElementById(STRIKE_PREVIEW_ELEMENT_ID);
 	if (el) {
 		el.style.display = 'none';

@@ -46,6 +46,50 @@ import {
 } from './action_css.js';
 import { ALERT_KIND_RELIGION, ALERT_KIND_TURNS, addAlertTurn, canWatchReligion, cancelAlert, getAlert, getAlertTurnsRemaining, isUnitAlerted, startReligionWatch } from './action_alert.js';
 
+import { ComponentUtilities } from '/core/ui-next/utilities/component-utilities.js';
+ComponentUtilities.preloadImages(
+    "blp:action_carpetbomb.png",
+    "blp:action_closeairsupport.png",
+    "blp:game/Action_Defend.png",
+    "fs://game/Action_Attack.png",
+    "fs://game/Action_Construct.png",
+    "fs://game/Action_Defend.png",
+    "fs://game/Action_Ranged.png",
+    "fs://game/action_bombard.png",
+    "fs://game/action_rangedattack.png",
+    "fs://game/action_treasure_fleet.png",
+    "fs://game/unit_chevron-01.png",
+    "fs://game/unit_chevron-02.png",
+    "fs://game/unit_chevron-03.png",
+    "fs://game/action-panel-mod/icons/Actions/action_Coordinated Attack_256.dds",
+    "fs://game/action-panel-mod/icons/Actions/action_Focus Fire_256.dds",
+    "fs://game/action-panel-mod/icons/Actions/action_Fortify_256.dds",
+    "fs://game/action-panel-mod/icons/Actions/action_Pillage_256.dds",
+    "fs://game/action-panel-mod/icons/Actions/action_Sleep_256.dds",
+    "fs://game/action-panel-mod/icons/Actions/action_Timed_Sleep_256.dds",
+    "fs://game/action-panel-mod/icons/Generic/generic_Cavalry_256.dds",
+    "fs://game/action-panel-mod/icons/Generic/generic_Hex_256.dds",
+    "fs://game/action-panel-mod/icons/Generic/generic_Plus_256.dds",
+    "fs://game/action-panel-mod/icons/Generic/generic_Star_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Airlift_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Assault_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Bastion_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Bombardment_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Dogfighting_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Engagement_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Leadership_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Logistics_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Maneuver_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Raids_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/promo_Trung Nhi_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/stat_Health_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/stat_Melee_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/stat_Movement_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/stat_Ranged_256.dds",
+    "fs://game/action-panel-mod/icons/Promotions/stat_Sight_256.dds",
+    "fs://game/action-panel-mod/icons/custom_reinforce.dds",
+);
+
 const MOVEMENT_BADGE_CLASS = 'ap-mod-movement-badge';
 const MOVEMENT_BADGE_STYLE_ID = 'ap-mod-movement-badge-style';
 
@@ -994,8 +1038,9 @@ function injectFlagIconPickerStyle() {
 	document.head.appendChild(style);
 }
 
-const PICKER_PANEL_HEIGHT = 640;
-const PICKER_PANEL_TOP = -544;
+const PX_SCALE = GlobalScaling.getCurrentScale() / 100;
+const PICKER_PANEL_HEIGHT = 640 * PX_SCALE;
+const PICKER_PANEL_TOP = -544 * PX_SCALE;
 
 class UnitRenameFlagIconDecorator {
 	constructor(component) {
