@@ -1,5 +1,15 @@
-v1.0:
+# Civilization VII: Better Action Panel
+Adds useful UI features to minimise micromanagement for units. 
+- Bulk attack options that dont end your commander turn, with multi attack previews.
+- Manual Reinforcement actions to path units to a commander, or gather units near to a commander with a click. Also allows cross ocean reinforcement and naval units reinforcing in doing so.
+- Settlements get rally points for units, so produced units can be set to travel to a given point or commander on being produced, including treasure convoys.
+- New unit alerts allow sleeping a unit for a set number of turns, or for missionaries, until a settlement changes from your religion.
+- Orders can be shift-queued so a missionary can walk somewhere and convert once they arrive.
+- Handy little stuff like movement and tier of units of packed units, an ability breakdown, and custom emblems and promotion glyphs on commander flags.
 
+Contributors welcome!
+# Changelog
+v1.0:
 
 General Commander Changes:
 - Adds a movement indicator on units in a commander, so you know which air units can still attack, or which land units can pop out.
