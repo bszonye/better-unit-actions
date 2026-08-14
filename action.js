@@ -50,7 +50,7 @@ import { ComponentUtilities } from '/core/ui-next/utilities/component-utilities.
 ComponentUtilities.preloadImages(
     "blp:action_carpetbomb.png",
     "blp:action_closeairsupport.png",
-    "blp:game/Action_Defend",
+    "blp:game/Action_Defend.png",
     "fs://game/Action_Attack.png",
     "fs://game/Action_Construct.png",
     "fs://game/Action_Defend.png",
