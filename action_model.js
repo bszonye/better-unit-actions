@@ -491,7 +491,7 @@ export function getReinforceCallCandidates(commander) {
 	const candidates = [];
 	for (const unitId of player.Units.getUnitIds()) {
 		const unit = Units.get(unitId);
-		if (!unit || !canUnitReinforce(unit)) {
+		if (!unit || !canUnitReinforce(unit) || !unit.Movement?.movementMovesRemaining) {
 			continue;
 		}
 		if (getReinforceDomainInfo(unit)?.isTarget(commander) !== true) {
