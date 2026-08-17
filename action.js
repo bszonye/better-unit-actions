@@ -498,6 +498,12 @@ class UnitActionsReinforceDecorator {
 			this.maybeAddReinforceAction();
 			return result;
 		};
+		const originalRealizeButtons = component.realizeButtons.bind(component);
+		component.realizeButtons = (unit) => {
+			const result = originalRealizeButtons(unit);
+			this.setReinforceRightClick();
+			return result;
+		};
 	}
 
 	maybeAddReinforceAction() {
@@ -570,6 +576,22 @@ class UnitActionsReinforceDecorator {
 			"UNITCOMMAND_ADD_TO_ARMY",  // before Add to Commander
 			action
 		);
+	}
+	setReinforceRightClick() {
+		const index = this.component.standardActions
+			.findIndex(a => a.type == "MOD_REINFORCE");
+		if (index == -1) return;
+		const unitId = this.component.unitId;
+		const unit = unitId && ComponentID.isValid(unitId) ? Units.get(unitId) : null;
+		const button = this.component.standardActionElements[index];
+		setButtonRightClick(button, () => {
+			const best = getBestReinforceTarget(unit);
+			if (!best) {
+				return false;
+			}
+			startReinforce(unit, best);
+			return true;
+		});
 	}
 	spliceUnitActions(afterType, beforeType, ...newActions) {
 		const actions = this.component.actions;
