@@ -508,7 +508,8 @@ class UnitActionsReinforceDecorator {
 
 	maybeAddReinforceAction() {
 		const unitId = this.component.unitId;
-		const unit = unitId && ComponentID.isValid(unitId) ? Units.get(unitId) : null;
+		const unit = this.unit =
+			unitId && ComponentID.isValid(unitId) ? Units.get(unitId) : null;
 		if (!unit || !canUnitReinforce(unit)) {
 			return;
 		}
@@ -543,7 +544,7 @@ class UnitActionsReinforceDecorator {
 				InterfaceMode.switchTo(REINFORCE_MODE, { UnitID: unit.id });
 			},
 		};
-		const best = getBestReinforceTarget(unit);
+		const best = this.bestReinforceTarget = getBestReinforceTarget(unit);
 		if (best) {
 			const commanderLevel = best.commander.Experience?.getLevel ?? 0;
 			const hasRoom = best.freeSlots > 0;
@@ -578,20 +579,20 @@ class UnitActionsReinforceDecorator {
 		);
 	}
 	setReinforceRightClick() {
-		const index = this.component.standardActions
-			.findIndex(a => a.type == "MOD_REINFORCE");
-		if (index == -1) return;
-		const unitId = this.component.unitId;
-		const unit = unitId && ComponentID.isValid(unitId) ? Units.get(unitId) : null;
-		const button = this.component.standardActionElements[index];
+		const button = this.getReinforceButton();
+		if (!button) return;
 		setButtonRightClick(button, () => {
-			const best = getBestReinforceTarget(unit);
-			if (!best) {
+			if (!this.bestReinforceTarget) {
 				return false;
 			}
-			startReinforce(unit, best);
+			startReinforce(this.unit, this.bestReinforceTarget);
 			return true;
 		});
+	}
+	getReinforceButton() {
+		const index = this.component.standardActions
+			.findIndex(a => a.type == "MOD_REINFORCE");
+		return index == -1 ? null : this.component.standardActionElements[index];
 	}
 	spliceUnitActions(afterType, beforeType, ...newActions) {
 		const actions = this.component.actions;
