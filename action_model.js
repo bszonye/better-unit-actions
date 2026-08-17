@@ -459,7 +459,7 @@ export function canUnitReinforce(unit) {
 	if (ComponentID.isValid(unit.armyId) || !unit.location || unit.location.x < 0) {
 		return false;
 	}
-	return (unit.Movement?.movementMovesRemaining ?? 0) > 0;
+	return true;
 }
 
 // when ranking unit on strength, ensure it chooses highest value
