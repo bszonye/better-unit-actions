@@ -760,7 +760,7 @@ export function resolveReinforcePath(unit, commander, claimedPlots = null) {
 	}
     // next to commander, but no legal join as no movement left
 	if (GameplayMap.getPlotDistance(
-		unit.location.x, unit.location.y, commander.location.x, commander.location.y) === 1) {
+		unit.location.x, unit.location.y, commander.location.x, commander.location.y) <= 1) {
 		return { turns: 1, destination: unit.location };
 	}
 	const turnsFor = (path) => (path?.turns?.length ? path.turns[path.turns.length - 1] : null);
