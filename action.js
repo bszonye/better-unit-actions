@@ -438,10 +438,11 @@ function buildActionTooltip(title, description, disabledReason) {
 class UnitActionsMassRebaseDecorator {
 	constructor(component) {
 		this.component = component;
-		const originalRealizeButtons = component.realizeButtons.bind(component);
-		component.realizeButtons = () => {
-			originalRealizeButtons();
+		const originalGetUnitActions = component.getUnitActions.bind(component);
+		component.getUnitActions = (unit) => {
+			const result = originalGetUnitActions(unit);
 			this.maybeAddMassRebaseAction();
+			return result;
 		};
 	}
 
@@ -475,10 +476,7 @@ class UnitActionsMassRebaseDecorator {
 				InterfaceMode.switchTo(MASS_REBASE_MODE, { ArmyId: unit.armyId });
 			},
 		};
-		this.component.commandActions.push(massRebaseAction);
-		this.component.createButtons([massRebaseAction]);
-		applyCommanderButtonFrame(this.component, 1);
-		respaceActionRow(this.component.commanderContainer);
+		this.component.actions.unshift(massRebaseAction);
 	}
 
 	beforeAttach() { }
@@ -494,10 +492,11 @@ Controls.decorate('unit-actions', (component) => new UnitActionsMassRebaseDecora
 class UnitActionsReinforceDecorator {
 	constructor(component) {
 		this.component = component;
-		const originalRealizeButtons = component.realizeButtons.bind(component);
-		component.realizeButtons = () => {
-			originalRealizeButtons();
+		const originalGetUnitActions = component.getUnitActions.bind(component);
+		component.getUnitActions = (unit) => {
+			const result = originalGetUnitActions(unit);
 			this.maybeAddReinforceAction();
+			return result;
 		};
 	}
 
@@ -566,17 +565,28 @@ class UnitActionsReinforceDecorator {
 					Locale.compose('LOC_BETTER_ACTIONS_NEAREST_REINFORCE_FAIL_NO_FREE_SLOTS_REASON')}[/STYLE]`;
 			}
 		}
-		this.component.standardActions.push(action);
-		this.component.createButtons([action]);
-		const button = this.component.standardActionElements[this.component.standardActionElements.length - 1];
-		setButtonRightClick(button, () => {
-			if (!best) {
-				return false;
-			}
-			startReinforce(unit, best);
-			return true;
-		});
-		respaceActionRow(this.component.standardContainer);
+		this.spliceUnitActions(
+			"UNITOPERATION_REINFORCE_ARMY",  // after Reinforce Army
+			"UNITCOMMAND_ADD_TO_ARMY",  // before Add to Commander
+			action
+		);
+	}
+	spliceUnitActions(afterType, beforeType, ...newActions) {
+		const actions = this.component.actions;
+		const after = afterType ? actions.findIndex(a => a.type == afterType) : -1;
+		// splice after first type
+		if (after != -1) {
+			actions.splice(after + 1, 0, ...newActions);
+			return;
+		}
+		// splice before second type
+		const before = beforeType ? actions.findIndex(a => a.type == beforeType) : -1;
+		if (before != -1) {
+			actions.splice(before, 0, ...newActions);
+			return;
+		}
+		// if neither endpoint found, splice onto end
+		actions.push(...newActions);
 	}
 
 	beforeAttach() { }
