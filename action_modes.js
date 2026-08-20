@@ -5,7 +5,7 @@ import ChoosePlotInterfaceMode from '/base-standard/ui/interface-modes/interface
 import { ComponentID } from '/core/ui/utilities/utilities-component-id.js';
 import { Audio } from '/core/ui/audio-base/audio-support.js';
 import { HighlightColors } from '/core/ui/utilities/utilities-color.js';
-import { ADD_TO_ARMY_COMMAND, AIR_ATTACK_OPERATION, MASS_REBASE_OPERATION, MELEE_ATTACK_COMMAND, MOVE_TO_OPERATION, RANGE_ATTACK_OPERATION, canMeleeAttackTargetNow, getAdjacentMeleeCandidates, getClassEligibleAttackers, getDestinationRemainingCapacity, getReinforceTargets, getRebaseEligibleArmyUnits, resolveReinforcePath, plotHasWorthwhileTarget, sortJoinCandidates } from './action_model.js';
+import { ADD_TO_ARMY_COMMAND, AIR_ATTACK_OPERATION, MASS_REBASE_OPERATION, MELEE_ATTACK_COMMAND, MOVE_TO_OPERATION, canMeleeAttackTargetNow, getAdjacentMeleeCandidates, getClassEligibleAttackers, getDestinationRemainingCapacity, getFocusFireOperation, getReinforceTargets, getRebaseEligibleArmyUnits, resolveReinforcePath, plotHasWorthwhileTarget, sortJoinCandidates } from './action_model.js';
 import { buildFocusFireSteps, planMeleeFocusFire, simulateStrikeSequence } from './action_combat.js';
 import { COMMAND_KIND_ATTACH, COMMAND_KIND_REINFORCE, forgetCommand, getCommands, onCommandsRestored, saveCommand } from './action_store.js';
 
@@ -186,15 +186,17 @@ export const FOCUS_FIRE_VARIANTS = {
 
 async function runSmartFocusFire(commander, plot, variant) {
 	const steps = await buildFocusFireSteps(commander, plot);
+	const operation = getFocusFireOperation(commander);
 	for (const step of steps) {
 		console.error(
 			`focus-fire: unit ${JSON.stringify(step.attacker.id)} effective damage ${step.damage.min.toFixed(1)}-${step.damage.max.toFixed(1)},`,
 			`remaining HP ${step.remainingHP}`
 		);
-		if (!Game.UnitOperations.canStart(step.attacker.id, RANGE_ATTACK_OPERATION, { X: plot.x, Y: plot.y }, false)?.Success) {
+		if (!Game.UnitOperations.canStart(step.attacker.id, operation, { X: plot.x, Y: plot.y }, false)?.Success) {
+			console.error(`focus-fire: ${operation} refused for ${JSON.stringify(step.attacker.id)}; skipped`);
 			continue;
 		}
-		Game.UnitOperations.sendRequest(step.attacker.id, RANGE_ATTACK_OPERATION, { X: plot.x, Y: plot.y });
+		Game.UnitOperations.sendRequest(step.attacker.id, operation, { X: plot.x, Y: plot.y });
 	}
 }
 
