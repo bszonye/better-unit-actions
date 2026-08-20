@@ -438,10 +438,11 @@ function buildActionTooltip(title, description, disabledReason) {
 class UnitActionsMassRebaseDecorator {
 	constructor(component) {
 		this.component = component;
-		const originalRealizeButtons = component.realizeButtons.bind(component);
-		component.realizeButtons = () => {
-			originalRealizeButtons();
+		const originalGetUnitActions = component.getUnitActions.bind(component);
+		component.getUnitActions = (unit) => {
+			const result = originalGetUnitActions(unit);
 			this.maybeAddMassRebaseAction();
+			return result;
 		};
 	}
 
@@ -475,10 +476,7 @@ class UnitActionsMassRebaseDecorator {
 				InterfaceMode.switchTo(MASS_REBASE_MODE, { ArmyId: unit.armyId });
 			},
 		};
-		this.component.commandActions.push(massRebaseAction);
-		this.component.createButtons([massRebaseAction]);
-		applyCommanderButtonFrame(this.component, 1);
-		respaceActionRow(this.component.commanderContainer);
+		this.component.actions.unshift(massRebaseAction);
 	}
 
 	beforeAttach() { }
@@ -494,16 +492,24 @@ Controls.decorate('unit-actions', (component) => new UnitActionsMassRebaseDecora
 class UnitActionsReinforceDecorator {
 	constructor(component) {
 		this.component = component;
-		const originalRealizeButtons = component.realizeButtons.bind(component);
-		component.realizeButtons = () => {
-			originalRealizeButtons();
+		const originalGetUnitActions = component.getUnitActions.bind(component);
+		component.getUnitActions = (unit) => {
+			const result = originalGetUnitActions(unit);
 			this.maybeAddReinforceAction();
+			return result;
+		};
+		const originalRealizeButtons = component.realizeButtons.bind(component);
+		component.realizeButtons = (unit) => {
+			const result = originalRealizeButtons(unit);
+			this.setReinforceRightClick();
+			return result;
 		};
 	}
 
 	maybeAddReinforceAction() {
 		const unitId = this.component.unitId;
-		const unit = unitId && ComponentID.isValid(unitId) ? Units.get(unitId) : null;
+		const unit = this.unit =
+			unitId && ComponentID.isValid(unitId) ? Units.get(unitId) : null;
 		if (!unit || !canUnitReinforce(unit)) {
 			return;
 		}
@@ -538,7 +544,7 @@ class UnitActionsReinforceDecorator {
 				InterfaceMode.switchTo(REINFORCE_MODE, { UnitID: unit.id });
 			},
 		};
-		const best = getBestReinforceTarget(unit);
+		const best = this.bestReinforceTarget = getBestReinforceTarget(unit);
 		if (best) {
 			const commanderLevel = best.commander.Experience?.getLevel ?? 0;
 			const hasRoom = best.freeSlots > 0;
@@ -566,17 +572,44 @@ class UnitActionsReinforceDecorator {
 					Locale.compose('LOC_BETTER_ACTIONS_NEAREST_REINFORCE_FAIL_NO_FREE_SLOTS_REASON')}[/STYLE]`;
 			}
 		}
-		this.component.standardActions.push(action);
-		this.component.createButtons([action]);
-		const button = this.component.standardActionElements[this.component.standardActionElements.length - 1];
+		this.spliceUnitActions(
+			"UNITOPERATION_REINFORCE_ARMY",  // after Reinforce Army
+			"UNITCOMMAND_ADD_TO_ARMY",  // before Add to Commander
+			action
+		);
+	}
+	setReinforceRightClick() {
+		const button = this.getReinforceButton();
+		if (!button) return;
 		setButtonRightClick(button, () => {
-			if (!best) {
+			if (!this.bestReinforceTarget) {
 				return false;
 			}
-			startReinforce(unit, best);
+			startReinforce(this.unit, this.bestReinforceTarget);
 			return true;
 		});
-		respaceActionRow(this.component.standardContainer);
+	}
+	getReinforceButton() {
+		const index = this.component.standardActions
+			.findIndex(a => a.type == "MOD_REINFORCE");
+		return index == -1 ? null : this.component.standardActionElements[index];
+	}
+	spliceUnitActions(afterType, beforeType, ...newActions) {
+		const actions = this.component.actions;
+		const after = afterType ? actions.findIndex(a => a.type == afterType) : -1;
+		// splice after first type
+		if (after != -1) {
+			actions.splice(after + 1, 0, ...newActions);
+			return;
+		}
+		// splice before second type
+		const before = beforeType ? actions.findIndex(a => a.type == beforeType) : -1;
+		if (before != -1) {
+			actions.splice(before, 0, ...newActions);
+			return;
+		}
+		// if neither endpoint found, splice onto end
+		actions.push(...newActions);
 	}
 
 	beforeAttach() { }

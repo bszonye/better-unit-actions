@@ -459,7 +459,7 @@ export function canUnitReinforce(unit) {
 	if (ComponentID.isValid(unit.armyId) || !unit.location || unit.location.x < 0) {
 		return false;
 	}
-	return (unit.Movement?.movementMovesRemaining ?? 0) > 0;
+	return true;
 }
 
 // when ranking unit on strength, ensure it chooses highest value
@@ -491,7 +491,7 @@ export function getReinforceCallCandidates(commander) {
 	const candidates = [];
 	for (const unitId of player.Units.getUnitIds()) {
 		const unit = Units.get(unitId);
-		if (!unit || !canUnitReinforce(unit)) {
+		if (!unit || !canUnitReinforce(unit) || !unit.Movement?.movementMovesRemaining) {
 			continue;
 		}
 		if (getReinforceDomainInfo(unit)?.isTarget(commander) !== true) {
@@ -760,8 +760,8 @@ export function resolveReinforcePath(unit, commander, claimedPlots = null) {
 	}
     // next to commander, but no legal join as no movement left
 	if (GameplayMap.getPlotDistance(
-		unit.location.x, unit.location.y, commander.location.x, commander.location.y) === 1) {
-		return { turns: 0, destination: unit.location };
+		unit.location.x, unit.location.y, commander.location.x, commander.location.y) <= 1) {
+		return { turns: 1, destination: unit.location };
 	}
 	const turnsFor = (path) => (path?.turns?.length ? path.turns[path.turns.length - 1] : null);
 

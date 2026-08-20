@@ -2,11 +2,12 @@
 // Pure rendering: it takes an array of plan steps and emits
 
 import { SetIsPlotTooltipVisible } from '/base-standard/ui-next/tooltips/plot-tooltip/plot-tooltip.js';
+import ViewManager from '/core/ui/views/view-manager.js';
 
 const STRIKE_PREVIEW_ELEMENT_ID = 'ap-mod-strike-preview';
 
 function ensureStrikePreviewElement() {
-	SetIsPlotTooltipVisible(false);
+	if (ViewManager.current.getName() == "Unit") SetIsPlotTooltipVisible(false);
 	let el = document.getElementById(STRIKE_PREVIEW_ELEMENT_ID);
 	if (el) {
 		return el;
@@ -31,7 +32,7 @@ function ensureStrikePreviewElement() {
 }
 
 export function hideStrikePreview() {
-	SetIsPlotTooltipVisible(true);
+	if (ViewManager.current.getName() == "Unit") SetIsPlotTooltipVisible(true);
 	const el = document.getElementById(STRIKE_PREVIEW_ELEMENT_ID);
 	if (el) {
 		el.style.display = 'none';

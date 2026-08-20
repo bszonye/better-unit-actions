@@ -359,9 +359,9 @@ class ReinforceInterfaceMode extends ChoosePlotInterfaceMode {
 		if (this.targetsByPlot.size === 0) {
 			return;
 		}
-		const BLUE_TRANSPARENT_LINEAR = { x: 0.2, y: 0.5, z: 1, w: 0.5 };
+		const GREEN_TRANSPARENT_LINEAR = { x: 0, y: 1, z: 0, w: 0.5 };
 		const plotOverlay = overlay.addPlotOverlay();
-		plotOverlay?.addPlots([...this.targetsByPlot.keys()], { fillColor: BLUE_TRANSPARENT_LINEAR });
+		plotOverlay?.addPlots([...this.targetsByPlot.keys()], { fillColor: GREEN_TRANSPARENT_LINEAR });
 		Audio.playSound('data-audio-plot-select-overlay', 'interact-unit');
 	}
 
