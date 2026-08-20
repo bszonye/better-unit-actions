@@ -468,6 +468,7 @@ class UnitActionsMassRebaseDecorator {
 			icon: 'blp:action_rebase.png',
 			type: 'MOD_MASS_REBASE',
 			UICategory: UnitActionCategory.COMMAND,
+			priority: -1,
 			active: hasEligibleUnit,
 			callback: () => {
 				if (!hasEligibleUnit) {
@@ -516,34 +517,14 @@ class UnitActionsReinforceDecorator {
 			),
 			icon: 'fs://game/action-panel-mod/icons/custom_reinforce.dds',
 			type: 'MOD_REINFORCE',
-            active: hasTarget,
+			active: hasTarget,
 			UICategory: UnitActionCategory.MAIN,
+			priority: 83,
 			callback: () => {
 				InterfaceMode.switchTo(REINFORCE_MODE, { UnitID: unit.id });
 			},
 		};
-		this.spliceUnitActions(
-			"UNITOPERATION_REINFORCE_ARMY",  // after Reinforce Army
-			"UNITCOMMAND_ADD_TO_ARMY",  // before Add to Commander
-			action
-		);
-	}
-	spliceUnitActions(afterType, beforeType, ...newActions) {
-		const actions = this.component.actions;
-		const after = afterType ? actions.findIndex(a => a.type == afterType) : -1;
-		// splice after first type
-		if (after != -1) {
-			actions.splice(after + 1, 0, ...newActions);
-			return;
-		}
-		// splice before second type
-		const before = beforeType ? actions.findIndex(a => a.type == beforeType) : -1;
-		if (before != -1) {
-			actions.splice(before, 0, ...newActions);
-			return;
-		}
-		// if neither endpoint found, splice onto end
-		actions.push(...newActions);
+		this.component.actions.unshift(action);
 	}
 
 	beforeAttach() { }
