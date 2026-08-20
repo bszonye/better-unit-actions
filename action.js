@@ -16,7 +16,7 @@ import WorldInput from '/base-standard/ui/world-input/world-input.js';
 // The class is not exported, only this singleton, so the movement-range overlay is reached through
 // the instance and patched on its prototype.
 import { UnitMapDecorationSupport } from '/base-standard/ui/interface-modes/support-unit-map-decoration.js';
-import { ADD_TO_ARMY_COMMAND, AIR_ATTACK_OPERATION, AIR_DROP_ABILITY, BOMBER_CLASS, FOCUS_FIRE_CLASSES, FOCUS_FIRE_NAVAL_CLASSES, GROUND_ATTACKER_CLASS, MASS_REBASE_OPERATION, MELEE_ATTACK_COMMAND, NAVAL_ATTACK_OPERATION, RANGED_CLASS, RANGE_ATTACK_OPERATION, SIEGE_CLASS, REINFORCE_CALL_RADIUS, canCommanderAttach, canUnitReinforce, findCautiousMoveDestination, getAttachCandidate, getSharedEscortMovement, findEscortPacedDestination, commanderHoldsAircraft, getBestReinforceTarget, getCommanderFreeCapacity, getReinforceCallCandidates, getFocusedAttackBonus, getReinforceDomainInfo, getReinforceTargets, findArmyCommander, getAircraftPullCandidates, getClassEligibleAttackers, getLandPackCandidates, getPackedUnitsWithMovement, getUnitAbilities, getFocusFireClasses, getFocusFireOperation, getRadiusEligiblePlayerUnits, getRebaseEligibleArmyUnits, getUnitRank, plotHasWorthwhileTarget, sortJoinCandidates } from './action_model.js';
+import { ADD_TO_ARMY_COMMAND, AIR_ATTACK_OPERATION, AIR_DROP_ABILITY, BOMBER_CLASS, FOCUS_FIRE_CLASSES, FOCUS_FIRE_NAVAL_CLASSES, GROUND_ATTACKER_CLASS, MASS_REBASE_OPERATION, MELEE_ATTACK_COMMAND, NAVAL_ATTACK_OPERATION, RANGED_CLASS, RANGE_ATTACK_OPERATION, SIEGE_CLASS, REINFORCE_CALL_RADIUS, canCommanderAttach, canUnitReinforce, findCautiousMoveDestination, getAttachCandidate, getSharedEscortMovement, findEscortPacedDestination, commanderHoldsAircraft, getCommanderFreeCapacity, getReinforceCallCandidates, getFocusedAttackBonus, hasReinforceTarget, findArmyCommander, getAircraftPullCandidates, getClassEligibleAttackers, getLandPackCandidates, getPackedUnitsWithMovement, getUnitAbilities, getFocusFireClasses, getFocusFireOperation, getRadiusEligiblePlayerUnits, getRebaseEligibleArmyUnits, getUnitRank, plotHasWorthwhileTarget, sortJoinCandidates } from './action_model.js';
 import { buildFocusFireSteps, planMeleeFocusFire, simulateStrikeSequence } from './action_combat.js';
 import { hideStrikePreview, showMultiAttackPreview } from './action_preview.js';
 import { QUEUEABLE_IN_PLACE_ACTIONS, canUnitEverDo, clearQueue, enqueueAction, enqueueMapOrder, hasQueue, isAttackOrder, isQueueModifierDown, isQueueableFor, setMapOrderIssuer, setPacedDestination } from './action_queue.js';
@@ -498,12 +498,6 @@ class UnitActionsReinforceDecorator {
 			this.maybeAddReinforceAction();
 			return result;
 		};
-		const originalRealizeButtons = component.realizeButtons.bind(component);
-		component.realizeButtons = (unit) => {
-			const result = originalRealizeButtons(unit);
-			this.setReinforceRightClick();
-			return result;
-		};
 	}
 
 	maybeAddReinforceAction() {
@@ -513,86 +507,26 @@ class UnitActionsReinforceDecorator {
 		if (!unit || !canUnitReinforce(unit)) {
 			return;
 		}
-		const domainInfo = getReinforceDomainInfo(unit);
-		// Use pathfinding to tell if units can reinforceto commander
-		const targets = getReinforceTargets(unit);
-		const soonest = targets.reduce((best, t) => (best === null || t.turns < best ? t.turns : best), null);
+		const hasTarget = hasReinforceTarget(unit);
 		const action = {
 			name: buildActionTooltip(
 				Locale.compose('LOC_BETTER_ACTIONS_MANUAL_REINFORCE_NAME'),
-				Locale.compose(
-					targets.length === 0
-						? 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_DESCRIPTION_NO_TARGET'
-						: soonest === 0
-							? 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_DESCRIPTION_THIS_TURN'
-							: 'LOC_BETTER_ACTIONS_MANUAL_REINFORCE_DESCRIPTION',
-					Locale.compose(domainInfo.verb),
-					soonest,
-				),
-				targets.length
-					? null
-					: Locale.compose('LOC_BETTER_ACTIONS_MANUAL_REINFORCE_FAIL_NO_REACHABLE_COMMANDERS_REASON'),
+				Locale.compose('LOC_BETTER_ACTIONS_MANUAL_REINFORCE_DESCRIPTION'),
+				Locale.compose('LOC_BETTER_ACTIONS_MANUAL_REINFORCE_FAIL_NO_COMMANDER_REASON'),
 			),
 			icon: 'fs://game/action-panel-mod/icons/custom_reinforce.dds',
 			type: 'MOD_REINFORCE',
+            active: hasTarget,
 			UICategory: UnitActionCategory.MAIN,
-			active: targets.length > 0,
 			callback: () => {
-				if (targets.length === 0) {
-					return;
-				}
 				InterfaceMode.switchTo(REINFORCE_MODE, { UnitID: unit.id });
 			},
 		};
-		const best = this.bestReinforceTarget = getBestReinforceTarget(unit);
-		if (best) {
-			const commanderLevel = best.commander.Experience?.getLevel ?? 0;
-			const hasRoom = best.freeSlots > 0;
-			const arrivesNow = best.turns === 0;
-			const descriptionTag = hasRoom
-				? (arrivesNow
-					? 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION_THIS_TURN'
-					: 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION')
-				: (arrivesNow
-					? 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION_FULL_THIS_TURN'
-					: 'LOC_BETTER_ACTIONS_NEAREST_REINFORCE_DESCRIPTION_FULL');
-			const descriptionArgs = [Locale.compose(best.commander.name), commanderLevel];
-			if (!arrivesNow) {
-				descriptionArgs.push(best.turns);
-			}
-			if (hasRoom) {
-				descriptionArgs.push(best.freeSlots);
-			}
-			// right-click option
-			action.name += `[n]${Locale.compose(
-				'LOC_BETTER_ACTIONS_REINFORCE_NEAREST_HINT', Locale.compose(descriptionTag, ...descriptionArgs)
-			)}`;
-			if (!hasRoom) {
-				action.name += `[n][STYLE:text-negative]${
-					Locale.compose('LOC_BETTER_ACTIONS_NEAREST_REINFORCE_FAIL_NO_FREE_SLOTS_REASON')}[/STYLE]`;
-			}
-		}
 		this.spliceUnitActions(
 			"UNITOPERATION_REINFORCE_ARMY",  // after Reinforce Army
 			"UNITCOMMAND_ADD_TO_ARMY",  // before Add to Commander
 			action
 		);
-	}
-	setReinforceRightClick() {
-		const button = this.getReinforceButton();
-		if (!button) return;
-		setButtonRightClick(button, () => {
-			if (!this.bestReinforceTarget) {
-				return false;
-			}
-			startReinforce(this.unit, this.bestReinforceTarget);
-			return true;
-		});
-	}
-	getReinforceButton() {
-		const index = this.component.standardActions
-			.findIndex(a => a.type == "MOD_REINFORCE");
-		return index == -1 ? null : this.component.standardActionElements[index];
 	}
 	spliceUnitActions(afterType, beforeType, ...newActions) {
 		const actions = this.component.actions;

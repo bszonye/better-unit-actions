@@ -576,23 +576,6 @@ export function getCommanderFreeSlots(commander, forUnit = null) {
 
 // choose a commander to send, by capacity/distance/experience
 // TODO should probably have a weighted sum, since a commander 40 tiles wins over a commander 2 tiles if one has more room
-export function getBestReinforceTarget(unit) {
-	const commanderLevel = (commander) => commander?.Experience?.getLevel ?? 0;
-	return getReinforceTargets(unit).reduce((best, target) => {
-		if (!best) {
-			return target;
-		}
-		const targetHasRoom = target.freeSlots > 0;
-		const bestHasRoom = best.freeSlots > 0;
-		if (targetHasRoom !== bestHasRoom) {
-			return targetHasRoom ? target : best;
-		}
-		if (target.turns !== best.turns) {
-			return target.turns < best.turns ? target : best;
-		}
-		return commanderLevel(target.commander) > commanderLevel(best.commander) ? target : best;
-	}, null);
-}
 
 // --- Cautious movement -------------------------------------------------------------------------
 // Stops a long move short of a ZOC unit the player had no way to see.
@@ -825,6 +808,28 @@ export function resolveReinforcePath(unit, commander, claimedPlots = null) {
 }
 
 // Commanders of the matching kind this unit could travel to, and turns.
+export function hasReinforceTarget(unit) {
+	const player = Players.get(GameContext.localPlayerID);
+	const domainInfo = getReinforceDomainInfo(unit);
+	if (!player?.Units || !domainInfo || !canUnitReinforce(unit)) {
+		return false;
+	}
+	for (const otherId of player.Units.getUnitIds()) {
+		const commander = Units.get(otherId);
+		if (!commander || !domainInfo.isTarget(commander)) {
+			continue;
+		}
+		if (!commander.location || commander.location.x < 0) {
+			continue;
+		}
+		if (getCommanderFreeSlots(commander, unit) <= 0) {
+			continue;
+		}
+		return true;
+	}
+	return false;
+}
+
 export function getReinforceTargets(unit) {
 	const player = Players.get(GameContext.localPlayerID);
 	const domainInfo = getReinforceDomainInfo(unit);
